@@ -1,9 +1,11 @@
-import React, { useMemo, useCallback } from "react";
+import React, { useMemo, useCallback, useState } from "react";
+import { useRouter } from "next/dist/client/router";
 import styled from "styled-components";
 import palette from "../styles/palette";
 import { TodoType } from "../types/todo";
 import TrashCanIcon from "../public/statics/trash_can.svg";
 import CheckMarkIcon from "../public/statics/check_mark.svg";
+import { checkTodoAPI } from "../lib/api/todo";
 
 const Container = styled.div`
   width: 100%;
@@ -128,13 +130,15 @@ interface IProps {
 }
 
 const TodoList: React.FC<IProps> = ({ todos }) => {
+  const [localTodos, setLocalTodos] = useState(todos);
+
   type ObjectIndexType = {
     [key: string]: number | undefined;
   };
 
   const todoColorNums2 = useMemo(() => {
     const colors: ObjectIndexType = {};
-    todos.forEach((todo) => {
+    localTodos.forEach((todo) => {
       const value = colors[todo.color];
       if (!value) {
         colors[`${todo.color}`] = 1;
@@ -147,11 +151,32 @@ const TodoList: React.FC<IProps> = ({ todos }) => {
   }, [todos]);
   console.log(todoColorNums2);
 
+  // * todo check
+  const router = useRouter();
+  const checkTodo = async (id: number) => {
+    try {
+      await checkTodoAPI(id);
+      // * check data를 view에 적용하는 방법 1
+      // router.reload();
+      // * check data를 view에 적용하는 방법 2
+      // router.push("/");
+
+      // * check data를 view에 적용하는 방법 3
+      const newTodos = localTodos.map((todo) => {
+        if (todo.id === id) return { ...todo, checked: !todo.checked };
+        return todo;
+      });
+      setLocalTodos(newTodos);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <Container>
       <div className="todo-list-header">
         <p className="todo-list-last-todo">
-          남은 TODO<span>{todos.length}개</span>
+          남은 TODO<span>{localTodos.length}개</span>
         </p>
         <div className="todo-list-header-colors">
           {Object.keys(todoColorNums2).map((color, index) => (
@@ -163,7 +188,7 @@ const TodoList: React.FC<IProps> = ({ todos }) => {
         </div>
       </div>
       <ul className="todo-list">
-        {todos.map((todo) => (
+        {localTodos.map((todo) => (
           <li className="todo-items" key={todo.id}>
             <div className="todo-left-side">
               <div className={`todo-color-block bg-${todo.color}`} />
@@ -181,7 +206,9 @@ const TodoList: React.FC<IProps> = ({ todos }) => {
                   <TrashCanIcon className="todo-trash-can" onClick={() => {}} />
                   <CheckMarkIcon
                     className="todo-check-mark"
-                    onClick={() => {}}
+                    onClick={() => {
+                      checkTodo(todo.id);
+                    }}
                   />
                 </>
               )}
@@ -190,7 +217,9 @@ const TodoList: React.FC<IProps> = ({ todos }) => {
                   <button
                     type="button"
                     className="todo-button"
-                    onClick={() => {}}
+                    onClick={() => {
+                      checkTodo(todo.id);
+                    }}
                   />
                 </>
               )}
