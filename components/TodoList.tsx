@@ -128,51 +128,6 @@ interface IProps {
 }
 
 const TodoList: React.FC<IProps> = ({ todos }) => {
-  const getTodoColorNums = useCallback(() => {
-    let red = 0;
-    let orange = 0;
-    let yellow = 0;
-    let green = 0;
-    let blue = 0;
-    let navy = 0;
-    todos.forEach((todo) => {
-      switch (todo.color) {
-        case "red":
-          red += 1;
-          break;
-        case "orange":
-          orange += 1;
-          break;
-        case "yellow":
-          yellow += 1;
-          break;
-        case "green":
-          green += 1;
-          break;
-        case "blue":
-          blue += 1;
-          break;
-        case "navy":
-          navy += 1;
-          break;
-        default:
-          break;
-      }
-    });
-
-    return {
-      red,
-      orange,
-      yellow,
-      green,
-      blue,
-      navy,
-    };
-  }, [todos]);
-
-  const todoColorNums = useMemo(getTodoColorNums, [todos]);
-  console.log(todoColorNums);
-
   type ObjectIndexType = {
     [key: string]: number | undefined;
   };
@@ -202,7 +157,7 @@ const TodoList: React.FC<IProps> = ({ todos }) => {
           {Object.keys(todoColorNums2).map((color, index) => (
             <div className="todo-list-header-color-num" key={index}>
               <div className={`todo-list-header-round-color bg-${color}`} />
-              <p>{todoColorNums[color]}개</p>
+              <p>{todoColorNums2[color]}개</p>
             </div>
           ))}
         </div>
