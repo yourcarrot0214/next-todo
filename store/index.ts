@@ -1,5 +1,5 @@
-import { createStore, applyMiddleware, combineReducers } from "redux";
-import { HYDRATE, createWrapper } from "next-redux-wrapper";
+import { createStore, applyMiddleware, combineReducers, Store } from "redux";
+import { HYDRATE, createWrapper, Context } from "next-redux-wrapper";
 import todo from "./todo";
 
 /*
@@ -37,8 +37,11 @@ const bindMiddleware = (middleware: any) => {
   return applyMiddleware(...middleware);
 };
 
-const initStore = () => {
+const initStore = (context: Context) => {
   return createStore(reducer, bindMiddleware([]));
 };
 
-export const wrapper = createWrapper(initStore);
+// export const wrapper = createWrapper(initStore);
+export const wrapper = createWrapper<Store<RootState>>(initStore, {
+  debug: true,
+});
