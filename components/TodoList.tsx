@@ -148,7 +148,6 @@ const TodoList: React.FC<IProps> = ({ todos }) => {
 
     return colors;
   }, [todos]);
-  console.log(todoColorNums2);
 
   // * todo check
   const router = useRouter();
