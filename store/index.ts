@@ -1,7 +1,12 @@
 import { HYDRATE, createWrapper, Context } from "next-redux-wrapper";
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
-import { Store } from "redux";
+import {
+  TypedUseSelectorHook,
+  useSelector as useReduxSelector,
+} from "react-redux";
 import todo from "./todo";
+
+export const useSelector: TypedUseSelectorHook<RootState> = useReduxSelector;
 
 const rootReducer = combineReducers({
   todo: todo.reducer,

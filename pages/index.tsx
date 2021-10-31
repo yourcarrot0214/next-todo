@@ -10,8 +10,8 @@ interface IProps {
   todos: TodoType[];
 }
 
-const app: NextPage<IProps> = ({ todos }) => {
-  return <TodoList todos={todos} />;
+const app: NextPage<IProps> = () => {
+  return <TodoList todos={[]} />;
 };
 
 //! 교재 코드 사용시 getServerSideProps의 프로퍼티인 async 함수에 대한 에러 발생
@@ -35,10 +35,10 @@ export const getServerSideProps = wrapper.getServerSideProps(
       console.log(store);
       const { data } = await getTodosAPI();
       store.dispatch(todoActions.setTodo(data));
-      return { props: { todos: data } };
+      return { props: {} };
     } catch (error) {
       console.log(error);
-      return { props: { todos: [] } };
+      return { props: {} };
     }
   }
 );

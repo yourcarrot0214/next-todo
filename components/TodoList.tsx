@@ -1,4 +1,5 @@
 import React, { useMemo, useCallback, useState } from "react";
+// import { useSelector } from "react-redux";
 import { useRouter } from "next/dist/client/router";
 import styled from "styled-components";
 import palette from "../styles/palette";
@@ -6,6 +7,7 @@ import { TodoType } from "../types/todo";
 import TrashCanIcon from "../public/statics/trash_can.svg";
 import CheckMarkIcon from "../public/statics/check_mark.svg";
 import { checkTodoAPI, deleteTodoAPI } from "../lib/api/todo";
+import { RootState, useSelector } from "../store";
 
 const Container = styled.div`
   width: 100%;
@@ -124,11 +126,12 @@ const Container = styled.div`
   }
 `;
 
-interface IProps {
-  todos: TodoType[];
-}
+// interface IProps {
+//   todos: TodoType[];
+// }
 
-const TodoList: React.FC<IProps> = ({ todos }) => {
+const TodoList: React.FC = () => {
+  const todos = useSelector((state: RootState) => state.todo.todos);
   const [localTodos, setLocalTodos] = useState(todos);
 
   type ObjectIndexType = {
